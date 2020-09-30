@@ -23,7 +23,7 @@
 /*------------------Macro Definition-------------------------*/
 #define maxSize    100
 /*------------------End of Macro Definition------------------*/
-//顺序栈
+//顺序栈的定义
 typedef struct {
 	int data[maxSize];
 	int top;
