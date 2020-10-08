@@ -64,7 +64,7 @@ void level(BTNode *p)
 		while (front != rear) {
 			front = (front+1)%maxSize;
 			q = que[front];
-			cout << q.data << endl;
+			cout << q->data << endl;
 			if (q->lchild != NULL) {
 				rear = (rear+1)%maxSize;
 				que[rear] = q->lchild;
@@ -89,7 +89,7 @@ void preorderNonrecursion(BTNode *bt)
 
 		while (top != -1) {
 			p = Stack[top--];
-			cout << p.data << endl;
+			cout << p->data << endl;
 			if (p->rchild != NULL) {
 				Stack[++top] = p->rchild;
 			}
@@ -116,7 +116,7 @@ void inorderNonrecursion(BTNode *bt)
 			}
 			if (top != -1) {
 				p = Stack[top--];
-				cout << p.data << endl;
+				cout << p->data << endl;
 				p = p->rchild;
 			}
 		}
@@ -147,7 +147,7 @@ void postorderNonrecursion(BTNode *bt)
 		//出栈序列则为后序遍历
 		while (top2 != -1) {
 			p = Stack2[top2--];
-			cout << p.data << endl;
+			cout << p->data << endl;
 		}
 	}
 }
@@ -155,47 +155,120 @@ void postorderNonrecursion(BTNode *bt)
 //通过中序遍历线索化二叉树
 void InThread(TBTNode *p, TBTNode *&pre)
 {
+	if (p != NULL) {
+		//递归，左子树线索化
+		InThread(p->lchild, pre);
+		//建立当前结点的前驱线索
+		if (p->lchild == NULL) {
+			p->lchild = pre;
+			p->ltag = 1;
+		}
+		//建立当前结点的后驱线索
+		if (pre != NULL && pre->rchild == NULL) {
+			pre->rchild = p;
+			pre->rtag = 1;
+		}
+		pre = p;
+		p = p->rchild;
+		//递归，右子树线索化
+		InThread(p, pre);
+	}
 }
 
 //通过中序遍历建立中序线索二叉树
 void createInThread(TBTNode *root)
 {
+	TBTNode *pre = NULL;
+	if (root != NULL) {
+		InThread(root, pre);
+		pre->rchild = NULL;
+		pre->rtag = NULL;
+	}
 }
 
 //中序下的第一个结点
 TBTNode *First(TBTNode *p)
 {
-
+	while (p->ltag == 0) {
+		p = p->lchild;
+	}
+	return p;
 }
 
 //中序下的下一个结点
 TBTNode *Next(TBTNode *p)
 {
-
+	if (p->rtag == 0) {
+		return First(p->rchild);
+	} else {
+		return p->rchild;
+	}
 }
 
 //中序遍历中序线索二叉树
 void Inorder(TBTNode *root)
 {
-
+	for (TBTNode *p=First(root); p!=NULL; p=Next(p)) {
+		cout << p->data << endl;
+	}
 }
 
 //前序线索二叉树
 void preThread(TBTNode *p, TBTNode *&pre)
 {
-
+	if (p != NULL) {
+		if (p->lchild == NULL) {
+			p->lchild = pre;
+			p->ltag = 1;
+		}
+		if (pre != NULL && pre->rchild == NULL) {
+			pre->rchild;
+			pre->rtag = 1;
+		}
+		pre = p;
+		if (p->ltag == 0) {
+			preThread(p->lchild, pre);
+		}
+		if (p->rtag == 0) {
+			preThread(p->rchild, pre);
+		}
+	}
 }
 
 //前序遍历前序线索二叉树
 void preorder(TBTNode *root)
 {
-
+	if (root != NULL) {
+		TBTNode *p = root;
+		while (p != NULL) {
+			while (p->ltag == 0) {
+				cout << p->data << endl;
+				p = p->lchild;
+			}
+			cout << p->data << endl;
+			p = p->rchild;
+		}
+	}
 }
 
 //后序线索二叉树
 void postThread(TBTNode *p, TBTNode *&pre)
 {
-
+	if (p != NULL) {
+		postThread(p->lchild, pre);
+		postThread(p->lchild, pre);
+		//建立当前结点的前驱线索
+		if (p->lchild == NULL) {
+			p->lchild = pre;
+			p->ltag = 1;
+		}
+		//前驱结点的后继线索
+		if (pre != NULL && pre->rchild == NULL) {
+			pre->rchild = p;
+			pre->rtag = 1;
+		}
+		pre = p;
+	}
 }
 
 
