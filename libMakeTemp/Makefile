@@ -19,10 +19,10 @@ CC = gcc
 CFLAGS = -g -Wall -I $(INC_SRC)
 
 ${main_s}: ${OBJ}
-	${CC} main.c ${DIR_OBJ}/${ST_LIB} -o main_s
+	@${CC} main.c ${DIR_OBJ}/${ST_LIB} -o main_s
 
 ${main_d}: ${OBJ}
-	${CC} main.c ${DIR_OBJ}/${DY_LIB} -o main_d
+	@${CC} main.c ${DIR_OBJ}/${DY_LIB} -o main_d
 
 ${DIR_OBJ}/%.o: ${DIR_SRC}/%.c
 	$(warning Comping add.o ...)
@@ -34,4 +34,4 @@ ${DIR_OBJ}/%.o: ${DIR_SRC}/%.c
 .PHONY: clean
 
 clean:
-	rm ./*.o ./*.a ./*.so
+	rm ./*.o ./*.a ./*.so ./main_*
